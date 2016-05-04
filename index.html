@@ -248,6 +248,21 @@
 								}
 							}
 						}
+						if(sumCol1 == total && sumCol2 == total && sumCol3 == total && sumCol4 == total)
+						{
+							if(sumRow1 == total && sumRow2 == total && sumRow3 == total && sumRow4 == total)	
+							{
+								if(sumD1 != total)
+									$("#sumD1").attr("class", $("#sumD1").attr("class").split("link").join("danger"));
+								if(sumD2 != total)
+									$("#sumD2").attr("class", $("#sumD1").attr("class").split("link").join("danger"));
+									
+								setTimeout(function(){
+									$("#sumD1").attr("class", $("#sumD1").attr("class").split("danger").join("link"));
+									$("#sumD2").attr("class", $("#sumD2").attr("class").split("danger").join("link"));									
+								},2000);
+							}
+						}						
 						//$(this).attr("href", window.location.href + "#" + incre );
 						return false;
 					}); 
