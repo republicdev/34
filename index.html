@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="La suma de cada columna, fila y diagonal deben sumar 34 y los n&uacute;meros no pueden repetirse.">
+		<meta name="description" content="Cada columna, fila y diagonal deben sumar 34, los n&uacute;meros no pueden repetirse.">
 		<meta name="author" content="">
 		<link rel="icon" href="../../favicon.ico"> 
   		<title>34++</title>
@@ -24,7 +24,7 @@
 		<div class="container">
 			<div class="page-header"  style="border:0px;">
 				<h1>34++</h1>
-				<h5>La suma de cada columna, fila y diagonal deben sumar 34 y los n&uacute;meros no pueden repetirse.</h5>
+				<h5>Cada columna, fila y diagonal deben sumar 34, los n&uacute;meros no pueden repetirse.</h5>
 			</div>
 			<p>
 	  			<table class="table">
@@ -65,14 +65,18 @@
 					</tr>	
 					<tr> 
 						<td><input type="submit" class="btn btn-block btn-link disabled" value="0"  id="sumD2" /></td>		
-						<td colspan="4" class="text-right"><button class="btn" onclick="clearTable();return false;"><span class="label" style="color:gray;" id="countClicks">0</span> Limpiar</button></td>
+						<td colspan="4" class="text-right">
+							<button class="btn" title="Click para incrementar o decrementar números." onclick="setNumberOrder(this);return false;">+</button>
+							<button class="btn" title="Click para setear a 0 un número." onclick="setCero(this);return false;">0</button>	| 				
+							<button class="btn disabled" onclick="clearTable(this);return false;" title="Click para activar boton y otro click para limpiar."><span class="label" style="color:gray;" id="countClicks">0</span> Limpiar</button>
+						</td>
 					</tr>
 				</table>
 			</p>
 		</div>
 		<footer class="footer">
 			<div class="container">
-				<p class="text-muted text-center">2016 - ver. 0.2.0</p>
+				<p class="text-muted text-center" style="color:#ddd">2016 - ver. 0.2.2</p>
 			</div>
 		</footer>
 		<script>
@@ -91,44 +95,53 @@
 
 			// SCRIPT ###
 			var countClicks = 0;
+			var setCeroCell = false;
+			var order = 0;
 			
 			$(function(){
 				$("a").each(function(index){
 					$(this).on("click", function(){
 						countClicks++;
 						$("#countClicks").html(countClicks);
-						var incre			= parseInt($(this).html()) + 1;
-						var total 			= 34;
-						var sumCol1 		= 0, sumCol2 = 0, sumCol3 = 0, sumCol4 = 0;						
-						var sumRow1 	= 0, sumRow2 = 0, sumRow3 = 0, sumRow4 = 0;												
-						var sumD1 		= 0, sumD2 = 0;
+						
+						var incre = parseInt($(this).html()) - 1;
+						if(order == 0)
+							incre = parseInt($(this).html()) + 1;
+
+						var total = 34;
+						var sumCol1 = 0, sumCol2 = 0, sumCol3 = 0, sumCol4 = 0;						
+						var sumRow1 = 0, sumRow2 = 0, sumRow3 = 0, sumRow4 = 0;												
+						var sumD1 = 0, sumD2 = 0;
 						
 						if(incre > 16) incre = 1;
-						$(this).html(incre);
+						if(incre == 0 || incre == -1) incre = 16;
+						
+						if(setCeroCell){
+							$(this).html(0);
+							setCeroCell = false;
+						} 
+						else 		
+							$(this).html(incre);
 						
 						for(var i = 0; i < $(".col1").find("a").length; i++) sumCol1 += parseInt($($(".col1").find("a")[i]).html());
 						for(var i = 0; i < $(".col2").find("a").length; i++) sumCol2 += parseInt($($(".col2").find("a")[i]).html());
 						for(var i = 0; i < $(".col3").find("a").length; i++) sumCol3 += parseInt($($(".col3").find("a")[i]).html());
 						for(var i = 0; i < $(".col4").find("a").length; i++) sumCol4 += parseInt($($(".col4").find("a")[i]).html());
-						
-						$("#sumCol1").val(sumCol1);
-						$("#sumCol2").val(sumCol2);
-						$("#sumCol3").val(sumCol3);
-						$("#sumCol4").val(sumCol4);						
-
 						for(var i = 0; i < $(".row1").find("a").length; i++) sumRow1 += parseInt($($(".row1").find("a")[i]).html());
 						for(var i = 0; i < $(".row2").find("a").length; i++) sumRow2 += parseInt($($(".row2").find("a")[i]).html());
 						for(var i = 0; i < $(".row3").find("a").length; i++) sumRow3 += parseInt($($(".row3").find("a")[i]).html());
 						for(var i = 0; i < $(".row4").find("a").length; i++) sumRow4 += parseInt($($(".row4").find("a")[i]).html());
-
+						for(var i = 0; i < $(".d1").length; i++) sumD1 += parseInt($($(".d1")[i]).html());
+						for(var i = 0; i < $(".d2").length; i++) sumD2 += parseInt($($(".d2")[i]).html());
+						
+						$("#sumCol1").val(sumCol1);
+						$("#sumCol2").val(sumCol2);
+						$("#sumCol3").val(sumCol3);
+						$("#sumCol4").val(sumCol4);							
 						$("#sumRow1").val(sumRow1);								
 						$("#sumRow2").val(sumRow2);								
 						$("#sumRow3").val(sumRow3);								
 						$("#sumRow4").val(sumRow4);
-		 
-						for(var i = 0; i < $(".d1").length; i++) sumD1 += parseInt($($(".d1")[i]).html());
-						for(var i = 0; i < $(".d2").length; i++) sumD2 += parseInt($($(".d2")[i]).html());
-
 						$("#sumD1").val(sumD1);						
 						$("#sumD2").val(sumD2);										
 
@@ -138,14 +151,7 @@
 							else if(i==3 || i==6 || i==9  || i==12) $($(".table").find("a")[i]).attr("class", "d2 btn btn-block btn-warning");
 							else $($(".table").find("a")[i]).attr("class", "btn btn-block btn-warning");
 						}			
-						 
-						//	{
-						//		 0,	 1,	 2,	 3,
-						//		 4,	 5,	 6,	 7,
-						//		 8,	 9,	10,	11,
-						//		12,	13,	14,	15
-						//	}			
- 
+
 						if(sumD1 == total){ $(".d1").attr("class","d1 btn btn-block btn-success");$("#sumD1").parent().css("background","#ddd"); }
 						else $("#sumD1").parent().removeAttr("style");
 						if(sumD2 == total){ $(".d2").attr("class","d2 btn btn-block btn-success");$("#sumD2").parent().css("background","#ddd"); }
@@ -158,7 +164,6 @@
 						else $("#sumCol3").parent().removeAttr("style");												
 						if(sumCol4 == total){ $(".col4 a").attr("class","btn btn-block btn-success"); $("#sumCol4").parent().css("background","#ddd"); }
 						else $("#sumCol4").parent().removeAttr("style");						
-						
 						if(sumRow1 == total){ $(".row1 a").attr("class","btn btn-block btn-success"); $($(".row1 td")[0]).css("background","#ddd"); }
 						else $($(".row1 td")[0]).removeAttr("style");
 						if(sumRow2 == total){ $(".row2 a").attr("class","btn btn-block btn-success"); $($(".row2 td")[0]).css("background","#ddd"); }
@@ -172,33 +177,30 @@
 						var arr = new Array();
 						for(var i = 0; i < $(".table").find("a").length;i++)
 						{
-							//if($($(".table").find("a")[i]).attr("class").split("danger").length == 1)
-							//{
-								if(i==0  && (sumD1 == total || sumCol1 == total || sumRow1 == total)) $($(".table").find("a")[i]).attr("class", "d1 btn btn-block btn-success");
-								if(i==5  && (sumD1 == total || sumCol2 == total || sumRow2 == total)) $($(".table").find("a")[i]).attr("class", "d1 btn btn-block btn-success");
-								if(i==10 && (sumD1 == total || sumCol3 == total || sumRow3 == total)) $($(".table").find("a")[i]).attr("class", "d1 btn btn-block btn-success");
-								if(i==15 && (sumD1 == total || sumCol4 == total || sumRow4 == total)) $($(".table").find("a")[i]).attr("class", "d1 btn btn-block btn-success");							
-								
-								if(i==3  && (sumD2 == total || sumCol4 == total  || sumRow1 == total)) $($(".table").find("a")[i]).attr("class", "d2 btn btn-block btn-success");
-								if(i==6  && (sumD2 == total || sumCol3 == total  || sumRow2 == total)) $($(".table").find("a")[i]).attr("class", "d2 btn btn-block btn-success");
-								if(i==9  && (sumD2 == total || sumCol2 == total  || sumRow3 == total)) $($(".table").find("a")[i]).attr("class", "d2 btn btn-block btn-success");
-								if(i==12 && (sumD2 == total || sumCol1 == total  || sumRow4 == total)) $($(".table").find("a")[i]).attr("class", "d2 btn btn-block btn-success");
-								
-								if(i==1  && (sumCol2 == total || sumRow1 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");
-								if(i==2  && (sumCol3 == total || sumRow1 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");
-								if(i==4  && (sumCol1 == total || sumRow2 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");
-								if(i==7  && (sumCol4 == total || sumRow2 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");
-								if(i==8  && (sumCol1 == total || sumRow3 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");
-								if(i==11 && (sumCol4 == total || sumRow3 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");
-								if(i==13 && (sumCol2 == total || sumRow4 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");
-								if(i==14 && (sumCol3 == total || sumRow4 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");	
-								
-								if(incre == parseInt($($(".table").find("a")[i]).html()))
-								{
-									repeatNumber++;
-									arr.push(i);
-								}
-							//}
+							if(i==0  && (sumD1 == total || sumCol1 == total || sumRow1 == total)) $($(".table").find("a")[i]).attr("class", "d1 btn btn-block btn-success");
+							if(i==5  && (sumD1 == total || sumCol2 == total || sumRow2 == total)) $($(".table").find("a")[i]).attr("class", "d1 btn btn-block btn-success");
+							if(i==10 && (sumD1 == total || sumCol3 == total || sumRow3 == total)) $($(".table").find("a")[i]).attr("class", "d1 btn btn-block btn-success");
+							if(i==15 && (sumD1 == total || sumCol4 == total || sumRow4 == total)) $($(".table").find("a")[i]).attr("class", "d1 btn btn-block btn-success");							
+							
+							if(i==3  && (sumD2 == total || sumCol4 == total  || sumRow1 == total)) $($(".table").find("a")[i]).attr("class", "d2 btn btn-block btn-success");
+							if(i==6  && (sumD2 == total || sumCol3 == total  || sumRow2 == total)) $($(".table").find("a")[i]).attr("class", "d2 btn btn-block btn-success");
+							if(i==9  && (sumD2 == total || sumCol2 == total  || sumRow3 == total)) $($(".table").find("a")[i]).attr("class", "d2 btn btn-block btn-success");
+							if(i==12 && (sumD2 == total || sumCol1 == total  || sumRow4 == total)) $($(".table").find("a")[i]).attr("class", "d2 btn btn-block btn-success");
+							
+							if(i==1  && (sumCol2 == total || sumRow1 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");
+							if(i==2  && (sumCol3 == total || sumRow1 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");
+							if(i==4  && (sumCol1 == total || sumRow2 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");
+							if(i==7  && (sumCol4 == total || sumRow2 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");
+							if(i==8  && (sumCol1 == total || sumRow3 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");
+							if(i==11 && (sumCol4 == total || sumRow3 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");
+							if(i==13 && (sumCol2 == total || sumRow4 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");
+							if(i==14 && (sumCol3 == total || sumRow4 == total))  $($(".table").find("a")[i]).attr("class", "btn btn-block btn-success");	
+							
+							if(incre == parseInt($($(".table").find("a")[i]).html()))
+							{
+								repeatNumber++;
+								arr.push(i);
+							}	
 						}
 
 						if(repeatNumber > 1)
@@ -212,8 +214,6 @@
 								$($(".table").find("a")[val]).attr("class", str + "btn btn-block btn-danger");
 							}
 						}
-						
-						console.clear();
 						
 						for(var i = 0; i < $(".table").find("a").length;i++)
 						{
@@ -248,45 +248,67 @@
 								}
 							}
 						}
-						
+						//$(this).attr("href", window.location.href + "#" + incre );
 						return false;
-					});
+					}); 
 				}); 
 			});
 			
-			function clearTable()
+			function clearTable(obj)
 			{
-				$("#sumCol1").val(0);
-				$("#sumCol2").val(0);
-				$("#sumCol3").val(0);
-				$("#sumCol4").val(0);
-				$("#sumRow1").val(0);				
-				$("#sumRow2").val(0);				
-				$("#sumRow3").val(0);				 
-				$("#sumRow4").val(0);				
-				$("#sumD1").val(0);								
-				$("#sumD2").val(0);								
+				if($(obj).attr("class").split("disabled").length == 1)
+				{					
+					$("#sumCol1").val(0);
+					$("#sumCol2").val(0);
+					$("#sumCol3").val(0);
+					$("#sumCol4").val(0);
+					$("#sumRow1").val(0);				
+					$("#sumRow2").val(0);				
+					$("#sumRow3").val(0);				 
+					$("#sumRow4").val(0);				
+					$("#sumD1").val(0);								
+					$("#sumD2").val(0);								
 				
-				$("#sumD1").parent().removeAttr("style");
-				$("#sumD2").parent().removeAttr("style");							
-				$("#sumCol1").parent().removeAttr("style");	
-				$("#sumCol2").parent().removeAttr("style");	
-				$("#sumCol3").parent().removeAttr("style");	
-				$("#sumCol4").parent().removeAttr("style");	
-				$($(".row1 td")[0]).removeAttr("style");
-				$($(".row2 td")[0]).removeAttr("style");
-				$($(".row3 td")[0]).removeAttr("style");
-				$($(".row4 td")[0]).removeAttr("style");		
+					$("#sumD1").parent().removeAttr("style");
+					$("#sumD2").parent().removeAttr("style");							
+					$("#sumCol1").parent().removeAttr("style");	
+					$("#sumCol2").parent().removeAttr("style");	
+					$("#sumCol3").parent().removeAttr("style");	
+					$("#sumCol4").parent().removeAttr("style");	
+					$($(".row1 td")[0]).removeAttr("style");
+					$($(".row2 td")[0]).removeAttr("style");
+					$($(".row3 td")[0]).removeAttr("style");
+					$($(".row4 td")[0]).removeAttr("style");		
 							
-				for(var i = 0; i < $(".table").find("a").length;i++)
-				{
-					if(i==0 || i==5 || i==10 || i==15) $($(".table").find("a")[i]).attr("class", "d1 btn btn-block btn-warning");
-					else if(i==3 || i==6 || i==9  || i==12) $($(".table").find("a")[i]).attr("class", "d2 btn btn-block btn-warning");
-					else $($(".table").find("a")[i]).attr("class", "btn btn-block btn-warning");
+					for(var i = 0; i < $(".table").find("a").length;i++)
+					{
+						if(i==0 || i==5 || i==10 || i==15) $($(".table").find("a")[i]).attr("class", "d1 btn btn-block btn-warning");
+						else if(i==3 || i==6 || i==9  || i==12) $($(".table").find("a")[i]).attr("class", "d2 btn btn-block btn-warning");
+						else $($(".table").find("a")[i]).attr("class", "btn btn-block btn-warning");
 					
-					 $($(".table").find("a")[i]).html(0);
-				}	
-				$("#countClicks").html("0");
+						$($(".table").find("a")[i]).html(0);
+					}	
+					$("#countClicks").html("0");
+					countClicks = 0;
+					$(obj).attr("class","btn disabled");
+				}
+				else{
+					$(obj).attr("class","btn");
+					setTimeout(function(){$(obj).attr("class","btn disabled");},3000);
+				}
+			}
+
+			function setNumberOrder(obj)
+			{
+				order = order == 0 ? 1 : 0;
+				if(order)
+					$(obj).text("-");
+				else
+					$(obj).text("+");
+			}
+			
+			function setCero(){
+				setCeroCell =true;
 			}
 			
 		</script>	
