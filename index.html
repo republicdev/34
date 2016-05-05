@@ -24,9 +24,19 @@
 		<div class="container">
 			<div class="page-header"  style="border:0px;">
 				<h1>34++</h1>
-				<h5>Cada <b>columna</b>, <b>fila</b> y <b>diagonal</b> deben sumar <b>34</b>, los n&uacute;meros no pueden repetirse.</h5>
+				<h5>
+					Cada <b>columna</b>, <b>fila</b> y <b>diagonal</b> deben sumar <b>34</b>, los n&uacute;meros no pueden repetirse.
+					<button class="btn btn-ms btn-link" style="margin:0px;padding:0px;" id="lc" onclick="displayHide();">¿Como?</button>
+				</h5>
 			</div>
 			<p>
+				<div id="como" style="display:none;" class="alert alert-info">
+					Pulsar sobre cada casilla e ir incrementando o decremetando el valor.<br/><br/>
+					<b>Al pulsar uno de los botones siguientes...</b><br/><br/>
+					<button class="btn btn-xs">+</button> el signo indica si incrementa o decrementa el valor pulsado.<br/><br/>
+					<button class="btn btn-xs">0</button> pasa el valor a 0, pero se debe volver a pulsar para otra casilla.<br/><br/>
+					<button class="btn  btn-xs disabled"><span class="label" style="color:gray;">0</span> Limpiar</button> Pulsarlo una vez para activarlo y volver a pulsar para pasar todos los valores a 0. <br/><br/>
+				</div>
 	  			<table class="table">
 					<tr>
 						<td><input type="submit" class="btn btn-block btn-link disabled" value="0"  id="sumD1" /></td>			
@@ -248,6 +258,47 @@
 								}
 							}
 						}
+
+						if(sumCol1 == total && sumCol2 == total && sumCol3 == total && sumCol4 == total)
+						{
+							if(sumRow1 != total) $("#sumRow1").attr("class", $("#sumRow1").attr("class").split("link").join("danger"));							
+							if(sumRow2 != total) $("#sumRow2").attr("class", $("#sumRow2").attr("class").split("link").join("danger"));														
+							if(sumRow3 != total) $("#sumRow3").attr("class", $("#sumRow3").attr("class").split("link").join("danger"));														
+							if(sumRow4 != total) $("#sumRow4").attr("class", $("#sumRow4").attr("class").split("link").join("danger"));														
+
+							if(sumD1 != total) $("#sumD1").attr("class", $("#sumD1").attr("class").split("link").join("danger"));
+							if(sumD2 != total) $("#sumD2").attr("class", $("#sumD1").attr("class").split("link").join("danger"));
+							
+							setTimeout(function(){
+								$("#sumRow1").attr("class", $("#sumRow1").attr("class").split("danger").join("link"));							
+								$("#sumRow2").attr("class", $("#sumRow2").attr("class").split("danger").join("link"));														
+								$("#sumRow3").attr("class", $("#sumRow3").attr("class").split("danger").join("link"));														
+								$("#sumRow4").attr("class", $("#sumRow4").attr("class").split("danger").join("link"));														
+								$("#sumD1").attr("class", $("#sumD1").attr("class").split("danger").join("link"));
+								$("#sumD2").attr("class", $("#sumD1").attr("class").split("danger").join("link"));
+							},2000);
+						}
+						
+						if(sumRow1 == total && sumRow2 == total && sumRow3 == total && sumRow4 == total)
+						{
+							if(sumCol1 != total) $("#sumCol1").attr("class", $("#sumCol1").attr("class").split("link").join("danger"));							
+							if(sumCol2 != total) $("#sumCol2").attr("class", $("#sumCol2").attr("class").split("link").join("danger"));														
+							if(sumCol3 != total) $("#sumCol3").attr("class", $("#sumCol3").attr("class").split("link").join("danger"));														
+							if(sumCol4 != total) $("#sumCol4").attr("class", $("#sumCol4").attr("class").split("link").join("danger"));														
+
+							if(sumD1 != total) $("#sumD1").attr("class", $("#sumD1").attr("class").split("link").join("danger"));
+							if(sumD2 != total) $("#sumD2").attr("class", $("#sumD1").attr("class").split("link").join("danger"));
+							
+							setTimeout(function(){
+								$("#sumCol1").attr("class", $("#sumCol1").attr("class").split("danger").join("link"));							
+								$("#sumCol2").attr("class", $("#sumCol2").attr("class").split("danger").join("link"));														
+								$("#sumCol3").attr("class", $("#sumCol3").attr("class").split("danger").join("link"));														
+								$("#sumCol4").attr("class", $("#sumCol4").attr("class").split("danger").join("link"));														
+								$("#sumD1").attr("class", $("#sumD1").attr("class").split("danger").join("link"));
+								$("#sumD2").attr("class", $("#sumD1").attr("class").split("danger").join("link"));
+							},2000);
+						}						
+						
 						if(sumCol1 == total && sumCol2 == total && sumCol3 == total && sumCol4 == total)
 						{
 							if(sumRow1 == total && sumRow2 == total && sumRow3 == total && sumRow4 == total)	
@@ -262,7 +313,8 @@
 									$("#sumD2").attr("class", $("#sumD2").attr("class").split("danger").join("link"));									
 								},2000);
 							}
-						}						
+						}
+						
 						//$(this).attr("href", window.location.href + "#" + incre );
 						return false;
 					}); 
@@ -324,6 +376,19 @@
 			
 			function setCero(){
 				setCeroCell =true;
+			}
+			
+			function displayHide()
+			{
+				if($("#como").is(":visible")){
+					$("#como").hide();			
+					$("#lc").text("¿Como?");
+				}					
+				else{
+					$("#como").show();
+					$("#lc").text("Quitar ayuda");					
+				}
+				//return false;
 			}
 			
 		</script>	
