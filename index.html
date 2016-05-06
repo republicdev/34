@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="Cada columna, fila y diagonal deben sumar 34, los n&uacute;meros no pueden repetirse.">
+		<meta name="description" content="Cada columna, fila y diagonal deben sumar 34, los n&uacute;meros (1 al 16) no pueden repetirse.">
 		<meta name="author" content="">
 		<link rel="icon" href="../../favicon.ico"> 
   		<title>34++</title>
@@ -25,17 +25,22 @@
 			<div class="page-header"  style="border:0px;">
 				<h1>34++</h1>
 				<h5>
-					Cada <b>columna</b>, <b>fila</b> y <b>diagonal</b> deben sumar <b>34</b>, los n&uacute;meros no pueden repetirse.
-					<button class="btn btn-ms btn-link" style="margin:0px;padding:0px;" id="lc" onclick="displayHide();">¿Como?</button>
+					Cada <b>columna</b>, <b>fila</b> y <b>diagonal</b> deben sumar <b>34</b>, los n&uacute;meros (1 al 16) no pueden repetirse.
 				</h5>
 			</div>
 			<p>
-				<div id="como" style="display:none;" class="alert alert-info">
-					Pulsar sobre cada casilla e ir incrementando o decremetando el valor.<br/><br/>
-					<b>Al pulsar uno de los botones siguientes...</b><br/><br/>
-					<button class="btn btn-xs">+</button> el signo indica si incrementa o decrementa el valor pulsado.<br/><br/>
-					<button class="btn btn-xs">0</button> pasa el valor a 0, pero se debe volver a pulsar para otra casilla.<br/><br/>
-					<button class="btn  btn-xs disabled"><span class="label" style="color:gray;">0</span> Limpiar</button> Pulsarlo una vez para activarlo y volver a pulsar para pasar todos los valores a 0. <br/><br/>
+				<div class="text-left" id="loading" style="display:none;">
+					<b>Cargando..</b>
+				</div>			
+				<div class="text-right">
+					<button class="btn btn-ms btn-link" style="color:steelblue;margin:0px;padding:0px;" id="lc" onclick="displayHide();">Ayuda</button>
+				</div>
+				<div id="como" style="display:none;" class="alert alert-warning">
+					Pulsar sobre cada casilla para ir incrementando o decremetando el valor, (min. 1, max. 16)<br/><br/>
+					<b>Al pulsar uno de los siguientes botones...</b><br/><br/>
+					<button class="btn">+</button> (+) incrementa, (-) decrementa el valor de la casilla.<br/><br/>
+					<button class="btn">0</button> asigna el 0 a la casilla, repetir la acci&oacute;n por cada casilla.<br/><br/>
+					<button class="btn disabled"><span class="label" style="color:gray;">0</span> Limpiar</button> pulsarlo una vez para activarlo y volver a pulsar para pasar todos los valores a 0. <br/><br/>
 				</div>
 	  			<table class="table">
 					<tr>
@@ -82,11 +87,14 @@
 						</td>
 					</tr>
 				</table>
+				<label style="color:#ddd">Resultado</label>
+				<!-- <input type="text" class="form-control" style="color:#ccc" id="url" onclick="this.select();" /> -->
+				<a href="" id="url" target="_black">...</a>
 			</p>
 		</div>
 		<footer class="footer">
 			<div class="container">
-				<p class="text-muted text-center" style="color:#ddd">2016 - ver. 0.2.2</p>
+				<p class="text-muted text-center" style="color:#ddd">2016 - ver. 0.2.3</p>
 			</div>
 		</footer>
 		<script>
@@ -107,10 +115,24 @@
 			var countClicks = 0;
 			var setCeroCell = false;
 			var order = 0;
+			var result = new Array();
+			var resultString = "";
+			var maxNumber = 16;
 			
 			$(function(){
+			
+				// Set default value results.
+				for(var i = 0;i < maxNumber;i++)
+					result.push(0);
+					
+				if(window.location.href.split("#").length > 1) $("#loading").show();					
+				setTimeout(function(){
+					setClicks();
+				},3000);
+				
 				$("a").each(function(index){
 					$(this).on("click", function(){
+					
 						countClicks++;
 						$("#countClicks").html(countClicks);
 						
@@ -185,6 +207,7 @@
 						
 						var repeatNumber = 0;
 						var arr = new Array();
+						
 						for(var i = 0; i < $(".table").find("a").length;i++)
 						{
 							if(i==0  && (sumD1 == total || sumCol1 == total || sumRow1 == total)) $($(".table").find("a")[i]).attr("class", "d1 btn btn-block btn-success");
@@ -315,11 +338,60 @@
 							}
 						}
 						
+						result[index] = incre;
+						resultString = "";
+						for(var i =0; i < maxNumber;i++)
+							resultString += i + "-" + result[i] + "+";
+							
+						//$("#url").val("");
+						//$("#url").val( window.location.href + "#" + resultString);
+				
+						var url = window.location.href;
+						
+						if(window.location.href.split("#").length > 1)				
+							url = window.location.href.split("#")[0];
+						
+						$("#url").attr("href",url+ "#" + resultString);
+						$("#url").html(url + "#" + resultString);
 						//$(this).attr("href", window.location.href + "#" + incre );
 						return false;
 					}); 
 				}); 
 			});
+			
+			function setClicks()
+			{
+				if(window.location.href.split("#").length > 1)
+				{
+					//var x = "0-1+1-2+2-15+3-16+4-0+5-0+6-0+7-0+8-0+9-0+10-0+11-0+12-0+13-0+14-0+15-0+".split("+");
+					var numbers = window.location.href.split("#")[1];
+
+					var x = numbers.split("+");
+					if(x.length > 1)
+					{
+						for(var i = 0; i < $(".table").find("a").length;i++)
+						{  
+							for(var n = 0; n < x.length-1; n++)
+							{ 
+								if(n == i)
+								{
+									var nClicks = x[n].split("-")[1]; 
+									var arrN = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+									
+									var isN = 0; // $.inArray(nClicks, arrN );
+									
+									while(nClicks > 0)
+									{
+										$($(".table").find("a")[i]).click(); 
+										nClicks--;
+									}
+								}
+							}
+						}
+					}	
+					$("#loading").hide();							
+				}
+			}
 			
 			function clearTable(obj)
 			{
@@ -360,8 +432,8 @@
 					$(obj).attr("class","btn disabled");
 				}
 				else{
-					$(obj).attr("class","btn");
-					setTimeout(function(){$(obj).attr("class","btn disabled");},3000);
+					$(obj).attr("class","btn btn-warning");
+					setTimeout(function(){$(obj).attr("class","btn disabled");},4000);
 				}
 			}
 
@@ -382,11 +454,11 @@
 			{
 				if($("#como").is(":visible")){
 					$("#como").hide();			
-					$("#lc").text("¿Como?");
+					$("#lc").text("Ayuda");
 				}					
 				else{
 					$("#como").show();
-					$("#lc").text("Quitar ayuda");					
+					$("#lc").text("Cerrar");					
 				}
 				//return false;
 			}
