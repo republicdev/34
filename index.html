@@ -137,7 +137,10 @@
 					$("#loading").show(); 
 					$(".table").hide(); 
 				}	
-				
+				else
+				{
+					$(".table").hide();				
+				}
 				setTimeout(function(){ setClicks(); }, 3000);
 				
 				$(".table a").each(function(index)
